@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- Home Screen (Welcome Page) -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.yourname.mytodoapp.ui.HomeFragment"
+        android:label="My TODO APP"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_allListsFragment"
+            app:destination="@id/allListsFragment" />
+    </fragment>
+
+    <!-- Screen that shows all the different To-Do Lists -->
+    <fragment
+        android:id="@+id/allListsFragment"
+        android:name="com.yourname.mytodoapp.ui.AllListsFragment"
+        android:label="My Lists"
+        tools:layout="@layout/fragment_all_lists" >
+        <action
+            android:id="@+id/action_allListsFragment_to_todoListFragment"
+            app:destination="@id/todoListFragment" />
+    </fragment>
+
+    <!-- Screen that shows the items within a single selected list -->
+    <fragment
+        android:id="@+id/todoListFragment"
+        android:name="com.yourname.mytodoapp.ui.TodoListFragment"
+        android:label="{listName}"
+        tools:layout="@layout/fragment_todo_list">
+        <!-- Arguments passed to this screen -->
+        <argument
+            android:name="listId"
+            app:argType="long" />
+        <argument
+            android:name="listName"
+            app:argType="string" />
+    </fragment>
+</navigation>
