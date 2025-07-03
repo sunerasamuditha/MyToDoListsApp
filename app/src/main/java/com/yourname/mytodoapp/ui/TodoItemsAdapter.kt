@@ -1,5 +1,6 @@
 package com.yourname.mytodoapp.ui
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ class TodoItemsAdapter(
         return ItemViewHolder(binding, onEditClicked, onDeleteClicked)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(getItem(position))
         holder.binding.dragHandle.setOnTouchListener { _, event ->

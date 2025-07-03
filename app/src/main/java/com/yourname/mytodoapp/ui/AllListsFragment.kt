@@ -28,7 +28,7 @@ class AllListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // **Performance optimizations: fixed size, cache, no change animations**
+
         binding.allListsRecyclerView.apply {
             setHasFixedSize(true)
             itemAnimator?.changeDuration = 0
