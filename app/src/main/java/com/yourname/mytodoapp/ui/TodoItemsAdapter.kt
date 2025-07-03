@@ -30,11 +30,13 @@ class TodoItemsAdapter(
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(getItem(position))
+        
+        // Clear any existing touch listener to prevent memory leaks
+        holder.binding.dragHandle.setOnTouchListener(null)
+        
         holder.binding.dragHandle.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                holder.binding.dragHandle.postDelayed({
-                    onStartDrag(holder)
-                }, 50) // Small delay improves UX
+                onStartDrag(holder)
             }
             false
         }

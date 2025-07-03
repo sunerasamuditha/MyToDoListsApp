@@ -32,7 +32,7 @@ class AllListsFragment : Fragment() {
         binding.allListsRecyclerView.apply {
             setHasFixedSize(true)
             itemAnimator?.changeDuration = 0
-            setItemViewCacheSize(20)
+            setItemViewCacheSize(10)
             layoutManager = LinearLayoutManager(requireContext())
         }
 

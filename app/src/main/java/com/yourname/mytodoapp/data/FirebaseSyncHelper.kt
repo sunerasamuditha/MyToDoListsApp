@@ -10,10 +10,17 @@ import kotlinx.coroutines.tasks.await
 class FirebaseSyncHelper(private val dao: TodoDao, private val context: Context) {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val userId = FirebaseAuth.getInstance().uid ?: "anonymous"
+    
+    // Cache userId to avoid repeated calls
+    private val userId: String by lazy {
+        FirebaseAuth.getInstance().uid ?: "anonymous"
+    }
 
-    private val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-        ?: "unknown_device_${System.currentTimeMillis()}"
+    // Cache deviceId to avoid repeated system calls
+    private val deviceId: String by lazy {
+        Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+            ?: "unknown_device_${System.currentTimeMillis()}"
+    }
 
     private val basePath get() = firestore
         .collection("users")
@@ -29,17 +36,25 @@ class FirebaseSyncHelper(private val dao: TodoDao, private val context: Context)
             val lists = dao.getAllListsForBackup()
             val items = dao.getAllItemsForBackup()
 
-            for (list in lists) {
-                listsRef.document(list.id.toString()).set(list).await()
+            // Use batch operations for better performance
+            val batch = firestore.batch()
+            
+            lists.forEach { list ->
+                val docRef = listsRef.document(list.id.toString())
+                batch.set(docRef, list)
             }
 
-            for (item in items) {
-                itemsRef.document(item.id.toString()).set(item).await()
+            items.forEach { item ->
+                val docRef = itemsRef.document(item.id.toString())
+                batch.set(docRef, item)
             }
+            
+            batch.commit().await()
 
             Log.d("FirebaseBackup", "Backup successful for device: $deviceId")
         } catch (e: Exception) {
             Log.e("FirebaseBackup", "Failed to backup: ${e.message}")
+            throw e
         }
     }
 

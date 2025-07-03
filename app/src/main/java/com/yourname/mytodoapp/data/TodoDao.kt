@@ -20,6 +20,8 @@ interface TodoDao {
     suspend fun insertItem(item: TodoItem)
     @Update
     suspend fun updateItem(item: TodoItem)
+    @Update
+    suspend fun updateItems(items: List<TodoItem>)
     @Delete
     suspend fun deleteItem(item: TodoItem)
     @Query("SELECT * FROM todo_items WHERE listId = :listId ORDER BY position ASC")

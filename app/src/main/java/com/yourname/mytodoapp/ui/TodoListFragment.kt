@@ -48,14 +48,13 @@ class TodoListFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)                       // speed up measuring
             itemAnimator?.changeDuration = 0            // no change animations
-            setItemViewCacheSize(30)                    // cache more views
-            isDrawingCacheEnabled = true                // reuse bitmaps
-            drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+            setItemViewCacheSize(10)                    // reduced cache size
+            // Remove deprecated drawing cache
         }
 
-        // 2️⃣ Observe & submit list using DiffUtil in background
+        // Observe & submit list using DiffUtil in background
         viewModel.items.observe(viewLifecycleOwner, Observer { items ->
-            adapter.submitList(items.toList())
+            adapter.submitList(items)
         })
 
         // 3️⃣ Add-button handler

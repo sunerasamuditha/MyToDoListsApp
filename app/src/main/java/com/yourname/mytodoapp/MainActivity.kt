@@ -14,21 +14,28 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        // Wait until nav_host_fragment is laid out
-        findViewById<View>(R.id.nav_host_fragment).viewTreeObserver.addOnGlobalLayoutListener {
-            val navController = findNavController(R.id.nav_host_fragment)
-            setupActionBarWithNavController(navController)
+        // Set up navigation safely with a post delay
+        findViewById<View>(R.id.nav_host_fragment)?.post {
+            try {
+                val navController = findNavController(R.id.nav_host_fragment)
+                setupActionBarWithNavController(navController)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Navigation setup failed: ${e.message}")
+            }
         }
 
-        // Firebase anonymous login
-        FirebaseAuth.getInstance().signInAnonymously()
-            .addOnSuccessListener {
-                Log.d("FirebaseAuth", "Signed in anonymously.")
-            }
-            .addOnFailureListener {
-                Log.e("FirebaseAuth", "Failed to sign in: ${it.message}")
-            }
-
+        // Firebase anonymous login with error handling
+        try {
+            FirebaseAuth.getInstance().signInAnonymously()
+                .addOnSuccessListener {
+                    Log.d("FirebaseAuth", "Signed in anonymously.")
+                }
+                .addOnFailureListener {
+                    Log.e("FirebaseAuth", "Failed to sign in: ${it.message}")
+                }
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Firebase initialization failed: ${e.message}")
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

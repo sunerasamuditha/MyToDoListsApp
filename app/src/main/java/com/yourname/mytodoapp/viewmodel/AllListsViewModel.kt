@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class AllListsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = AppDatabase.getDatabase(application).todoDao()
-    private val firebaseHelper = FirebaseSyncHelper(dao, application)  // pass context
+    private val firebaseHelper by lazy { FirebaseSyncHelper(dao, application) }  // Lazy initialization
 
     private val _toastMessage = MutableLiveData<String?>()
     val toastMessage: LiveData<String?> = _toastMessage

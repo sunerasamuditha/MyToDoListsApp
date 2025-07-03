@@ -39,11 +39,13 @@ class TodoListViewModel(application: Application, private val listId: Long) : An
             val movedItem = list.removeAt(fromPosition)
             list.add(toPosition, movedItem)
 
-            // Update positions in the database
+            // Batch update positions in the database for better performance
             list.forEachIndexed { index, item ->
                 item.position = index
-                dao.updateItem(item)
             }
+            
+            // Update all items in a single transaction
+            dao.updateItems(list)
         }
     }
 }
